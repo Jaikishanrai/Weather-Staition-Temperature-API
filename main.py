@@ -10,10 +10,23 @@
 #                                                                                              when there is an error.
 # app.run(debug=True, port=5001 )---> flask apps always run on port 5000 by you can change the port of the app
 # str(station).zfill(6)----> add zeros to the string
+"""
+parse_dates=['    DATE']----> We can use the parse_dates parameter to convince pandas to turn things into real
+ datetime types. parse_dates takes a list of columns (since you could want to parse multiple columns into datetimes ).
+"""
+"""
+.squeeze() ----> This method is most useful when you don't know if your object is a Series or DataFrame, but you do know
+ it has just a single column. In that case you can safely call squeeze to ensure you have a Series. A specific axis to
+  squeeze. By default, all length-1 axes are squeezed.
+
+"""
 from flask import Flask, render_template
 import pandas as pd
 
 app = Flask(__name__)
+
+stations = pd.read_csv("data-small/stations.txt", skiprows=17)
+stations = stations[["STAID", "STANAME                                 "]]
 
 
 # when user visits /home , tutorial.html is called
@@ -21,7 +34,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return render_template("home.html", data=stations.to_html())
+    # data=stations.to_html() gives entire data in table form in html page
 
 
 @app.route("/api/v1/<station>/<date>")
